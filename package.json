@@ -1,9 +1,9 @@
 {
-  "name": "crd",
-  "version": "1.0.0",
-  "main": "index.js",
   "repository": "https://github.com/KO-Good-code/crd-cli.git",
   "author": "chenrui <chenrui@mini1.cn>",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "workspaces": [
+    "packages/@crd/*"
+  ]
 }
