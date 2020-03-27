@@ -1,0 +1,27 @@
+{
+  "name": "@crd/cli-service",
+  "version": "1.0.0",
+  "description": "local service for crd-cli projects",
+  "main": "lib/Service.js",
+  "bin": {
+    "crd-cli-server": "bin/service.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@babel/core": "^7.9.0",
+    "babel-loader": "^8.1.0",
+    "babel-preset-react": "^6.24.1",
+    "chalk": "^3.0.0",
+    "css-loader": "^3.4.2",
+    "debug": "^4.1.1",
+    "dotenv": "^8.2.0",
+    "dotenv-expand": "^5.1.0",
+    "html-webpack-plugin": "^4.0.1",
+    "mini-css-extract-plugin": "^0.9.0",
+    "url-loader": "^4.0.0",
+    "webpack": "^4.42.1",
+    "webpack-chain": "^6.4.0",
+    "webpack-dev-server": "^3.10.3",
+    "webpack-merge": "^4.2.2"
+  }
+}
