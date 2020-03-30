@@ -2,10 +2,13 @@ const path = require("path");
 const merge = require('webpack-merge');
 const Config = require('webpack-chain');
 const dotenv = require('dotenv');
-const dotenvExpand = require('dotenv-expand');
+const {
+  LOCAL_IP
+} = require('./tools');
 const debug = require('debug');
 const chalk = require('chalk');
 const dev = require('./config/dev')
+const pro = require('./config/pro')
 const base = require('./config/public')
 const webpack = require('webpack')
 const webpackDevServer = require('webpack-dev-server');
@@ -34,33 +37,39 @@ module.exports = class Server {
     this.webpackChainFns.push(base)
     this.webpackRawConfigFns.push(userConfig)
     if (process.env.NODE_ENV === 'production') {
-
+      this.webpackChainFns.push(pro);
+      const config = this.resolveWebpackConfig()
+      webpack(config, (err, stats) => {
+        if (err || stats.hasErrors()) {
+          // 构建过程出错
+          console.error(err)
+          return;
+        }
+        console.log(stats.toString({
+          chunks: false,  // 使构建过程更静默无输出
+          colors: true,    // 在控制台展示颜色
+          modulesSort: 'size',
+          modules: false,
+          moduleTrace: false
+        }));
+      });
     } else {
       this.webpackChainFns.push(dev);
-      const options = {
-        contentBase: './dist',
-        hot: true,
-        host: 'localhost',
-        overlay: true,
-        stats: "errors-only",
-        clientLogLevel: "none",
-        open: true,
-        progress: true,
-        // useLocalIp: true
-      };
       const r = this.resolveWebpackConfig()
-      this.devServer(r, options)
+      this.devServer(r)
     }
 
   }
 
   //  webpack 服务启动
-  devServer(config, options) {
+  devServer(config) {
     const compiler = webpack(config);
-    const server = new webpackDevServer(compiler, options);
-    server.listen(8000, '127.0.0.1', () => {
-      console.log("Starting server on:")
-      console.log(chalk.greenBright('local: http://localhost:8000'));
+    const devServer = config.devServer;
+    const server = new webpackDevServer(compiler, devServer);
+    server.listen(devServer.port, devServer.host, () => {
+      console.log('\t-' + "Starting server on:")
+      console.log('\t\t-' + chalk.greenBright('local: http://localhost:' + devServer.port));
+      console.log('\n\t\t-' + chalk.greenBright('netWork: http://' + LOCAL_IP + ':' + devServer.port));
     });
   }
 
@@ -84,16 +93,23 @@ module.exports = class Server {
         }
       }
     }
+    load(basePath);
 
-    load(basePath)
-
-
-
+    // 默认的环境
+    if (mode) {
+      const defaultNodeEnv = (mode === 'production' || mode === 'test') ? mode : 'development';
+      process.env.NODE_ENV = defaultNodeEnv;
+    }
   }
 
-  async run(name, args = {}, rawArgy = []) {
-    const mode = args.mode || (name === 'build' && args.watch ? 'development' : this.modes[name])
+  /**
+   * @param {string} name 启动模式 start 开发 模式 build 生产
+   * @param {object} args mode 自定义环境配置
+   */
+  async run(name, args = {}) {
+    const mode = args.mode || (name === 'build' ? 'production' : 'development')
     this.init(mode)
+
   }
 
   //  webpack 内置配置初始化
@@ -126,7 +142,7 @@ module.exports = class Server {
     let fileConfig;
     try {
       fileConfig = require(configPath);
-      console.log(fileConfig)
+      
       if (typeof fileConfig === 'function') {
         fileConfig = fileConfig()
       }

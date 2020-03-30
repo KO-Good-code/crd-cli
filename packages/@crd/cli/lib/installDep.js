@@ -2,6 +2,7 @@ const {
   hasYarn
 } = require('./tools');
 const exec = require('execa');
+const chalk = require('chalk');
 
 // 安装项目依赖 rootName 安装目录
 
@@ -10,14 +11,15 @@ module.exports = async (rootName) => {
   if (!hasYarn) {
     cmd = "npm"
   }
-  await exec.sync(cmd, ['install'], {
+  
+  const r =  await exec(cmd, ['install'], {
     cwd: `./${rootName}`
-  }, (err, stdout, stderr) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    console.log(`stdout: ${stdout}`);
-    console.log(`stderr: ${stderr}`);
-  });
+  }).stdout
+  r.on('data', data => {
+    process.stdout.write(data);
+  })
+  r.on("end", data => {
+      console.log('\t\t' + chalk.greenBright('cd\t' + rootName));
+      console.log('\n\t\t' + chalk.greenBright('yarn start or npm start'));
+  })
 }

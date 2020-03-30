@@ -55,15 +55,12 @@ module.exports = async (projectName, options) => {
       spinner.start(chalk.greenBright('开始下载模板！'));
       spinner.color = 'yellow';
       await download(rootName);
-      spinner.succeed(chalk.green('模板下载完成！'))
+      spinner.succeed(chalk.green('模板下载完成！'));
       await generator({
         projectName,
         ...answer
-      }, rootName, rootName)
-      spinner.color = 'blue';
-      spinner.start(chalk.greenBright('开始安装项目依赖！'));
-      install(rootName)
-      spinner.succeed(chalk.blue('安装项目依赖完成！'))
+      }, rootName, rootName);
+      await install(rootName)
     } catch (error) {
       console.log(error)
       spinner.fail(chalk.redBright('项目初始化失败!'))

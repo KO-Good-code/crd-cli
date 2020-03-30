@@ -1,10 +1,45 @@
 const path = require('path');
 const HTMLPlugin = require('html-webpack-plugin');
-const htmlPath = path.resolve('public/index.html')
+const htmlPath = path.resolve('public/index.html');
+const CSSExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = webpackConfig => {
+
+  // 对语言样式 css 进行模块化
+  function createCSSRule(lang, test, loader, options) {
+
+    const baseRule = webpackConfig.module.rule(lang).test(test);
+
+    const modulesRule = baseRule.oneOf('modules').resourceQuery(/module/);
+    const normalRule = baseRule.oneOf('normal');
+
+    applyLoaders(baseRule)
+    // applyLoaders(normalRule)
+
+    function applyLoaders (rule) {
+      rule.use('extract-css-loader').loader(CSSExtractPlugin.loader)
+  
+      rule.use('css-loader')
+        .loader(require.resolve('css-loader'))
+      rule.use('postcss-loader').loader(require.resolve('postcss-loader')).options({
+        plugins: [require('autoprefixer')]
+      })
+  
+      if (loader) {
+        rule.use(loader).loader(require.resolve(loader))
+      }
+    }
+    
+  }
+
+  const extractOptions = {
+    filename: 'css/[name].[hash:4].css',
+  }
+
+  createCSSRule('css', /\.css$/)
+  createCSSRule('postcss', /\.p(ost)?css$/)
+  createCSSRule('scss', /\.scss$/, 'sass-loader')
   webpackConfig
-    .mode('development')
     .context(process.cwd())
     .entry('app')
       .add('./src/main.js')
@@ -21,9 +56,13 @@ module.exports = webpackConfig => {
       .test(/\.(png|jpe?g|gif|webp)(\?.*)?$/)
       .use('url-loader')
         .loader(require.resolve('url-loader'))
-        .options({
-          name: 'images/[name].[ext]'
-        });
+        .options(
+          {
+            limit: 10000,    // 10Kb
+            name: `/images/[hash:8].[name].[ext]`
+          }
+        )
+        .end()
   
   //  set   module babel  react  vue
   webpackConfig.module
@@ -47,6 +86,9 @@ module.exports = webpackConfig => {
   webpackConfig
     .plugin('html')
       .use(HTMLPlugin, [htmlOptions])
+      .end()
+    .plugin('extract-css')
+      .use(require('mini-css-extract-plugin'), [extractOptions])
   //  代码分割
   webpackConfig
     .optimization.splitChunks({
