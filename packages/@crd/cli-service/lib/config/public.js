@@ -10,8 +10,8 @@ module.exports = webpackConfig => {
 
     const baseRule = webpackConfig.module.rule(lang).test(test);
 
-    const modulesRule = baseRule.oneOf('modules').resourceQuery(/module/);
-    const normalRule = baseRule.oneOf('normal');
+    // const modulesRule = baseRule.oneOf('modules').resourceQuery(/module/);
+    // const normalRule = baseRule.oneOf('normal');
 
     applyLoaders(baseRule)
     // applyLoaders(normalRule)
@@ -22,11 +22,11 @@ module.exports = webpackConfig => {
       rule.use('css-loader')
         .loader(require.resolve('css-loader'))
       rule.use('postcss-loader').loader(require.resolve('postcss-loader')).options({
-        plugins: [require('autoprefixer')]
+        plugins: [require.resolve('autoprefixer')]
       })
   
       if (loader) {
-        rule.use(loader).loader(require.resolve(loader))
+        rule.use(loader).loader(loader)
       }
     }
     
@@ -46,7 +46,7 @@ module.exports = webpackConfig => {
       .end()
   webpackConfig.resolve
     .extensions
-      .merge(['.mjs', '.js', '.jsx', '.vue', '.json', '.wasm'])
+      .merge(['.mjs', '.js', '.jsx', '.vue', '.json', '.ts', '.tsx'])
       .end()
     .alias
       .set('@', path.resolve('src'));
@@ -63,6 +63,10 @@ module.exports = webpackConfig => {
           }
         )
         .end()
+  webpackConfig.module.rule('ts')
+      .test(/\.tsx?$/)
+      .use('ts-loader')
+         .loader('ts-loader')
   
   //  set   module babel  react  vue
   webpackConfig.module

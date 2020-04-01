@@ -42,7 +42,9 @@ const inspectName = async name => {
   return rootName
 }
 
-
+/**
+ * @param {string} projectName 项目名称
+*/
 
 module.exports = async (projectName, options) => {
   const cwd = options.cwd || process.cwd() //当前目录
@@ -54,8 +56,13 @@ module.exports = async (projectName, options) => {
     try {
       spinner.start(chalk.greenBright('开始下载模板！'));
       spinner.color = 'yellow';
-      await download(rootName);
+      const url = await download(rootName);
+      console.log(answer.lang)
+      if(answer.lang !== "TypeScript") {
+        rm(`${url}/react-template/tsconfig.json`)
+      }
       spinner.succeed(chalk.green('模板下载完成！'));
+      console.log(`🚀  Invoking generators...`)
       await generator({
         projectName,
         ...answer

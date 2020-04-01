@@ -1,15 +1,21 @@
 // 配置输出
 
 const prompts = [
+  // {
+  //   type: "list",
+  //   name: "template",
+  //   message: "选择模板类型",
+  //   choices: [
+  //     "react",
+  //     "vue"
+  //   ],
+  //   default: "react"
+  // },
   {
-    type: "list",
-    name: "template",
-    message: "选择模板类型",
-    choices: [
-      "react",
-      "vue"
-    ],
-    default: "react"
+    type: "input",
+    name: "author",
+    message:"please input author",
+    default: "author"
   },
   {
     type: "list",

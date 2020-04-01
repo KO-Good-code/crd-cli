@@ -138,7 +138,7 @@ module.exports = class Server {
 
   // 加载合并 用户的wenpack.config,js
   loadUserOptions() {
-    const configPath = path.resolve(this.context, 'crd.config.js')
+    const configPath = path.resolve(this.context, 'ng.config.js')
     let fileConfig;
     try {
       fileConfig = require(configPath);
@@ -153,7 +153,7 @@ module.exports = class Server {
         fileConfig = null
       }
     } catch (error) {
-      console.error(`Error loading ${chalk.bold('crd.config.js')}:`)
+      console.error(`Error loading ${chalk.bold('ng.config.js')}:`)
       fileConfig = null
     }
     return fileConfig;

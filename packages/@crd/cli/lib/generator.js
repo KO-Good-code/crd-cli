@@ -13,7 +13,8 @@ module.exports = async (metadata = {}, src, dest = '.') => {
     return Promise.reject(new Error(`无效的source：${src}`))
   }
 
-  const url = metadata.template === 'react' ? `${src}/react-template` : `${src}/vue-template`
+  // const url = metadata.template === 'react' ? `${src}/react-template` : `${src}/vue-template`
+  const url = `${src}/react-template`
 
   return new Promise((resolve, reject) => {
     
@@ -25,7 +26,15 @@ module.exports = async (metadata = {}, src, dest = '.') => {
       .use((files, metalsmith, done) => {
         const meta = metalsmith.metadata()
         Object.keys(files).forEach(fileName => {
+          
           const t = files[fileName].contents.toString()
+          Handlebars.registerHelper("if_eq", (left, right, options) => {
+            if(left === right ) {
+              return options.fn(this);
+            }else{
+              return options.inverse(this);
+            }
+          })
           files[fileName].contents = new Buffer.from(Handlebars.compile(t)(meta))
         })
         done()

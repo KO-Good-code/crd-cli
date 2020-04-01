@@ -19,6 +19,7 @@ module.exports = async (rootName) => {
     process.stdout.write(data);
   })
   r.on("end", data => {
+      console.log(`🎉  Successfully created project ${chalk.yellow(rootName)}.`)
       console.log('\t\t' + chalk.greenBright('cd\t' + rootName));
       console.log('\n\t\t' + chalk.greenBright('yarn start or npm start'));
   })

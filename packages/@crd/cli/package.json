@@ -1,11 +1,11 @@
 {
-  "name": "@crd/cli",
+  "name": "@neigri/cli",
   "version": "1.0.0",
   "description": "crd-cli简化脚手架",
   "main": "index.js",
   "author": "neigri",
   "bin": {
-    "crd": "command.js"
+    "ng": "command.js"
   },
   "keywords": [
     "crd",
@@ -23,5 +23,13 @@
     "metalsmith": "^2.3.0",
     "ora": "^4.0.3",
     "request": "^2.88.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KO-Good-code/crd-cli.git",
+    "directory": "packages/@crd/cli"
   }
 }

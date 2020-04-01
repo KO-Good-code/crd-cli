@@ -1,7 +1,7 @@
 {
   "name": "@neigri/cli-service",
   "version": "1.0.1",
-  "description": "local service for crd-cli projects",
+  "description": "local service for ng-cli projects",
   "author": "neigri",
   "main": "lib/Service.js",
   "bin": {
@@ -9,9 +9,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@babel/core": "^7.9.0",
     "autoprefixer": "^9.7.5",
-    "babel-loader": "^8.1.0",
     "chalk": "^3.0.0",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^3.4.2",
