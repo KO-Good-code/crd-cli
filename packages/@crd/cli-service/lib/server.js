@@ -66,11 +66,15 @@ module.exports = class Server {
     const compiler = webpack(config);
     const devServer = config.devServer;
     const server = new webpackDevServer(compiler, devServer);
-    server.listen(devServer.port, devServer.host, () => {
+    compiler.hooks.done.tap('ng-cli-service', stats => {
+      if (stats.hasErrors()) {
+        return;
+      }
       console.log('\t-' + "Starting server on:")
       console.log('\t\t-' + chalk.greenBright('local: http://localhost:' + devServer.port));
       console.log('\n\t\t-' + chalk.greenBright('netWork: http://' + LOCAL_IP + ':' + devServer.port));
     })
+    server.listen(devServer.port, devServer.host)
   }
 
   // 获取环境变量  mode  环境变量

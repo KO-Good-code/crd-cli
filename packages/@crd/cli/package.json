@@ -1,6 +1,6 @@
 {
   "name": "@neigri/cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "crd-cli简化脚手架",
   "main": "index.js",
   "author": "neigri",
