@@ -70,7 +70,7 @@ module.exports = class Server {
       console.log('\t-' + "Starting server on:")
       console.log('\t\t-' + chalk.greenBright('local: http://localhost:' + devServer.port));
       console.log('\n\t\t-' + chalk.greenBright('netWork: http://' + LOCAL_IP + ':' + devServer.port));
-    });
+    })
   }
 
   // 获取环境变量  mode  环境变量

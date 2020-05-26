@@ -1,7 +1,7 @@
 const path = require('path');
 const HTMLPlugin = require('html-webpack-plugin');
 const htmlPath = path.resolve('public/index.html');
-const CSSExtractPlugin = require('mini-css-extract-plugin')
+const CSSExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = webpackConfig => {
 
@@ -10,19 +10,19 @@ module.exports = webpackConfig => {
 
     const baseRule = webpackConfig.module.rule(lang).test(test);
 
-    // const modulesRule = baseRule.oneOf('modules').resourceQuery(/module/);
-    // const normalRule = baseRule.oneOf('normal');
+    const modulesRule = baseRule.oneOf('modules').resourceQuery(/module/);
+    const normalRule = baseRule.oneOf('normal');
 
-    applyLoaders(baseRule)
-    // applyLoaders(normalRule)
+    applyLoaders(modulesRule)
+    applyLoaders(normalRule)
 
     function applyLoaders (rule) {
       rule.use('extract-css-loader').loader(CSSExtractPlugin.loader)
   
       rule.use('css-loader')
-        .loader(require.resolve('css-loader'))
+        .loader(require.resolve('css-loader'));
       rule.use('postcss-loader').loader(require.resolve('postcss-loader')).options({
-        plugins: [require.resolve('autoprefixer')]
+        plugins: [require('autoprefixer')]
       })
   
       if (loader) {
