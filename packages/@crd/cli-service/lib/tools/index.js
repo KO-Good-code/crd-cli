@@ -1,3 +1,6 @@
+const path = require('path');
+
+
 // 获取本地ip
 function getIPAddress() {
   var interfaces = require('os').networkInterfaces();
@@ -12,6 +15,14 @@ function getIPAddress() {
   }
 }
 
+// 获取静态资源地址
+function getAssetPath( options, filePath) {
+  return options.assetsDir
+  ? path.posix.join(options.assetsDir, filePath)
+  : filePath
+}
+
 module.exports = {
-  LOCAL_IP: getIPAddress()
+  LOCAL_IP: getIPAddress(),
+  getAssetPath
 }

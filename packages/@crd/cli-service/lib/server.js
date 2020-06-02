@@ -13,6 +13,43 @@ const base = require('./config/public')
 const webpack = require('webpack')
 const webpackDevServer = require('webpack-dev-server');
 
+// 深copy
+const deepCopy = (obj, hash = new Map()) => {
+  // 判断是否是对象
+  const isObject = o => ( typeof o === 'object' || o === 'function' ) && o !== null;
+  if (!isObject(obj)) {
+    throw new Error("obj 不是一个对象！")
+  }
+
+  let isArray = Array.isArray(obj);
+  let cloneObj = isArray ? [] : {};
+
+  //  处理特殊对象
+  const Constructor = obj.constructor
+
+  switch(Constructor){
+    case RegExp:
+      cloneObj = new Constructor(obj);
+      break;
+    case Date:
+      cloneObj = new Constructor(obj.getTime());
+      break;
+    default:
+      if (hash.has(obj)) {
+        return hash.get(obj)
+      };
+      // 映射表设值
+      hash.set(obj, cloneObj);
+  }
+
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      cloneObj[key] = isObject(obj[key]) ? deepCopy(obj[key], hash) : obj[key]
+    }
+  }
+
+  return cloneObj;
+}
 
 module.exports = class Server {
   constructor(context) {
@@ -34,8 +71,19 @@ module.exports = class Server {
     // load user config
     const userConfig = this.loadUserOptions();
 
+    this.command = deepCopy(userConfig);
+
+    delete userConfig.css;
     this.webpackChainFns.push(base)
-    this.webpackRawConfigFns.push(userConfig)
+    this.webpackRawConfigFns.push(userConfig);
+    if (userConfig && userConfig.chainWebpack) {
+      this.webpackChainFns.push(userConfig.chainWebpack)
+    }
+    if (userConfig && userConfig.configureWebpack) {
+      this.webpackRawConfigFns.push(userConfig.configureWebpack)
+    }
+    
+    
     if (process.env.NODE_ENV === 'production') {
       this.webpackChainFns.push(pro);
       const config = this.resolveWebpackConfig()
@@ -70,6 +118,7 @@ module.exports = class Server {
       if (stats.hasErrors()) {
         return;
       }
+      console.clear()
       console.log('\t-' + "Starting server on:")
       console.log('\t\t-' + chalk.greenBright('local: http://localhost:' + devServer.port));
       console.log('\n\t\t-' + chalk.greenBright('netWork: http://' + LOCAL_IP + ':' + devServer.port));
@@ -120,22 +169,29 @@ module.exports = class Server {
   resolveChainableWebpackConfig() {
     const chainableConfig = new Config()
     // apply chains
-    this.webpackChainFns.forEach(fn => fn(chainableConfig))
+    this.webpackChainFns.forEach(fn => fn(chainableConfig, this.command))
     return chainableConfig
   }
 
   resolveWebpackConfig(chainableConfig = this.resolveChainableWebpackConfig()) {
     let config = chainableConfig.toConfig()
-    // const original = config
-
-    this.webpackRawConfigFns.forEach(fn => {
-      if (typeof fn === 'function') {
-        const res = fn(config)
-        if (res) config = merge(config, res)
-      } else if (fn) {
-        config = merge(config, fn)
-      }
-    })
+    try {
+      // const original = config
+      this.webpackRawConfigFns.forEach(fn => {
+        if (typeof fn === 'function') {
+          const res = fn(config)
+          if (res) config = merge.strategy({
+            entry: 'replace',
+            'module.rules': 'replace'
+          })(config, res)
+        } else if (fn) {
+          config = merge(config, fn)
+        }
+      })
+    } catch (error) {
+      console.log(error)
+    }
+    
 
     return config;
   }
@@ -144,8 +200,9 @@ module.exports = class Server {
   loadUserOptions() {
     const configPath = path.resolve(this.context, 'ng.config.js')
     let fileConfig;
+    fileConfig = require(configPath);
     try {
-      fileConfig = require(configPath);
+      
       
       if (typeof fileConfig === 'function') {
         fileConfig = fileConfig()
@@ -158,7 +215,8 @@ module.exports = class Server {
       }
     } catch (error) {
       console.error(`Error loading ${chalk.bold('ng.config.js')}:`)
-      fileConfig = null
+      fileConfig = null;
+      console.log(111)
     }
     return fileConfig;
   }
