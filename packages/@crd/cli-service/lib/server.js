@@ -12,6 +12,7 @@ const pro = require('./config/pro')
 const base = require('./config/public')
 const webpack = require('webpack')
 const webpackDevServer = require('webpack-dev-server');
+const fs = require('fs')
 
 // 深copy
 const deepCopy = (obj, hash = new Map()) => {
@@ -70,7 +71,7 @@ module.exports = class Server {
     this.loadEnv()
     // load user config
     const userConfig = this.loadUserOptions();
-
+    
     this.command = deepCopy(userConfig);
 
     delete userConfig.css;
@@ -199,11 +200,16 @@ module.exports = class Server {
   // 加载合并 用户的wenpack.config,js
   loadUserOptions() {
     const configPath = path.resolve(this.context, 'ng.config.js')
-    let fileConfig;
-    fileConfig = require(configPath);
+    let fileConfig, fileConfigPath;
+    if (configPath && fs.existsSync(configPath)) {
+      fileConfigPath = configPath
+    }
+    if(fileConfigPath) {
+      fileConfig = require(fileConfigPath);
+    } else {
+      return {};
+    }
     try {
-      
-      
       if (typeof fileConfig === 'function') {
         fileConfig = fileConfig()
       }
@@ -216,7 +222,6 @@ module.exports = class Server {
     } catch (error) {
       console.error(`Error loading ${chalk.bold('ng.config.js')}:`)
       fileConfig = null;
-      console.log(111)
     }
     return fileConfig;
   }
