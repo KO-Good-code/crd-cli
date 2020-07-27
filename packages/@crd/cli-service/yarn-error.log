@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js publish
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add dotenv-expand
 
 PATH: 
   C:\Program Files (x86)\NetSarang\Xshell 6\;C:\Program Files (x86)\NetSarang\Xftp 6\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\ProgramData\chocolatey\bin;C:\Program Files (x86)\Yarn\bin\;C:\Program Files\TortoiseSVN\bin;C:\Users\admin\AppData\Local\Yarn\bin;D:\jx_win64v8;C:\Users\chenrui\AppData\Local\Yarn\bin;C:\Users\chenrui\AppData\Local\Microsoft\WindowsApps;E:\Microsoft VS Code\bin;
@@ -14,13 +14,13 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: connect ETIMEDOUT 104.16.22.35:443
+  Error: connect ETIMEDOUT 104.16.24.35:443
       at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1097:14)
 
 npm manifest: 
   {
     "name": "@neigri/cli-service",
-    "version": "1.0.4",
+    "version": "1.0.6",
     "description": "local service for ng-cli projects",
     "author": "neigri",
     "main": "lib/Service.js",
@@ -1699,7 +1699,7 @@ Lockfile:
   
   dotenv-expand@^5.1.0:
     version "5.1.0"
-    resolved "https://registry.npmjs.org/dotenv-expand/-/dotenv-expand-5.1.0.tgz#3fbaf020bfd794884072ea26b1e9791d45a629f0"
+    resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-5.1.0.tgz#3fbaf020bfd794884072ea26b1e9791d45a629f0"
     integrity sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==
   
   dotenv@^8.2.0:

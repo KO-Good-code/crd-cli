@@ -12,7 +12,8 @@ const pro = require('./config/pro')
 const base = require('./config/public')
 const webpack = require('webpack')
 const webpackDevServer = require('webpack-dev-server');
-const fs = require('fs')
+const fs = require('fs');
+const dotenvExpand = require('dotenv-expand')
 
 // 深copy
 const deepCopy = (obj, hash = new Map()) => {
@@ -139,7 +140,7 @@ module.exports = class Server {
           path: envPath,
           debug: process.env.DEBUG
         })
-        // dotenvExpand(env)
+        dotenvExpand(env)
         logger(envPath, env)
       } catch (err) {
         if (err.toString().indexOf('ENOENT') < 0) {
@@ -150,10 +151,11 @@ module.exports = class Server {
     load(basePath);
 
     // 默认的环境
-    if (mode) {
-      const defaultNodeEnv = (mode === 'production' || mode === 'test') ? mode : 'development';
-      process.env.NODE_ENV = defaultNodeEnv;
-    }
+    // if (mode) {
+    //   const defaultNodeEnv = (mode === 'production' || mode === 'test') ? mode : 'development';
+    //   console.log(mode ,defaultNodeEnv)
+    //   process.env.NODE_ENV = defaultNodeEnv;
+    // }
   }
 
   /**
@@ -162,6 +164,11 @@ module.exports = class Server {
    */
   async run(name, args = {}) {
     const mode = args.mode || (name === 'build' ? 'production' : 'development')
+    // if(name === 'build') {
+    //   process.env.NODE_ENV = 'production';
+    // } else {
+    //   process.env.NODE_ENV = 'development';
+    // }
     this.init(mode)
 
   }

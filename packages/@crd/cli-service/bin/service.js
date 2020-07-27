@@ -10,6 +10,7 @@ const mode = rawArgv.indexOf('--mode') > 0;
 
 const args = mode && rawArgv[mode + 1] ? rawArgv[mode + 1] : null;
 
+
 service.run(rawArgv[0], {
   mode: args
 })
