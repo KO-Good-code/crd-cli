@@ -153,7 +153,6 @@ module.exports = class Server {
     // 默认的环境
     // if (mode) {
     //   const defaultNodeEnv = (mode === 'production' || mode === 'test') ? mode : 'development';
-    //   console.log(mode ,defaultNodeEnv)
     //   process.env.NODE_ENV = defaultNodeEnv;
     // }
   }
@@ -164,11 +163,11 @@ module.exports = class Server {
    */
   async run(name, args = {}) {
     const mode = args.mode || (name === 'build' ? 'production' : 'development')
-    // if(name === 'build') {
-    //   process.env.NODE_ENV = 'production';
-    // } else {
-    //   process.env.NODE_ENV = 'development';
-    // }
+    if(name === 'build') {
+      process.env.NODE_ENV = 'production';
+    } else {
+      process.env.NODE_ENV = 'development';
+    }
     this.init(mode)
 
   }
