@@ -22,7 +22,23 @@ function getAssetPath( options, filePath) {
   : filePath
 }
 
+// 处理环境变量
+function resolveClientEnv() {
+  const env = {}
+  Object.keys(process.env).forEach(key => {
+    env[key] = process.env[key]
+  })
+
+  for (const key in env) {
+    env[key] = JSON.stringify(env[key])
+  }
+  return {
+    'process.env': env
+  }
+}
+
 module.exports = {
   LOCAL_IP: getIPAddress(),
-  getAssetPath
+  getAssetPath,
+  resolveClientEnv
 }

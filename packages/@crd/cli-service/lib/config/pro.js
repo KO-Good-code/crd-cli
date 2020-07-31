@@ -1,6 +1,7 @@
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { resolveClientEnv } = require('../tools')
 module.exports = (webpackConfig) => {
   const op = {
     uglifyOptions: {
@@ -30,5 +31,10 @@ module.exports = (webpackConfig) => {
       .use(CleanWebpackPlugin, [{
         cleanAfterEveryBuildPatterns: ['dist']
       }])
+      .end()
+    .plugin('define')
+      .use(require('webpack/lib/DefinePlugin'), [
+        resolveClientEnv()
+      ])
     
 }
