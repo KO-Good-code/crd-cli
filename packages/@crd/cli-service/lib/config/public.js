@@ -85,7 +85,7 @@ module.exports = (webpackConfig, rootOptions) => {
   //  set module img
   webpackConfig.module
     .rule('images')
-      .test(/\.(png|jpe?g|gif|webp)(\?.*)?$/)
+      .test(/\.(png|jpe?g|gif|webp|mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/)
       .use('url-loader')
         .loader(require.resolve('url-loader'))
         .options(
