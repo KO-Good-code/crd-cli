@@ -1,6 +1,6 @@
 {
   "name": "@neigri/cli-service",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "local service for ng-cli projects",
   "author": "neigri",
   "main": "lib/Service.js",

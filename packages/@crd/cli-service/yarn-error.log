@@ -14,13 +14,13 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: connect ETIMEDOUT 104.16.27.35:443
+  Error: connect ETIMEDOUT 104.16.21.35:443
       at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1097:14)
 
 npm manifest: 
   {
     "name": "@neigri/cli-service",
-    "version": "1.0.7",
+    "version": "1.1.0",
     "description": "local service for ng-cli projects",
     "author": "neigri",
     "main": "lib/Service.js",
