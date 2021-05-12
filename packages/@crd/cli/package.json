@@ -18,7 +18,7 @@
     "download-git-repo": "^3.0.2",
     "execa": "^4.0.0",
     "glob": "^7.1.6",
-    "handlebars": "^4.7.3",
+    "handlebars": "^4.7.7",
     "inquirer": "^7.1.0",
     "metalsmith": "^2.3.0",
     "ora": "^4.0.3",
